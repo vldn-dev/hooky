@@ -28,8 +28,8 @@ game.create = function() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     // this.add.button(Candy.GAME_WIDTH - 96 - 10, 5, 'button-pause', this.managePause, this);
     _player = game.add.sprite(game.world.randomX, game.world.randomY, 'monster-idle');
-    _player.anchor.set(0.5);
-
+   
+ _player.anchor.set(0.5);
     game.physics.enable(_player, Phaser.Physics.ARCADE);
     _player.body.drag.set(100);
     _player.body.maxVelocity.set(200);
@@ -68,11 +68,10 @@ game.create = function() {
     game.screenWrap(_player);
     game.screenWrap(hook);
 
-    arrowKeys.onDownCallback = function(e) {
-        sendStream(_player);
-    };
-
-
+  hook.body.collideWorldBounds = true;
+  _player.body.collideWorldBounds = true;
+hook.body.bounce.setTo(1, 1);
+_player.body.bounce.setTo(1, 1);
 
 };
 
@@ -80,7 +79,9 @@ var channel = new DataChannel(location.hash.substr(1) || 'auto-session-establish
     firebase: 'webrtc-experiment'
 });
 game.update = function() {
-
+ game.physics.arcade.collide(hook, enemy);
+ game.physics.arcade.collide(enemyhooks, _player);
+  game.physics.arcade.collide(_player, enemy);
     if (arrowKeys.up.isDown) {
 
         game.physics.arcade.accelerationFromRotation(_player.rotation, 200, _player.body.acceleration);
@@ -95,8 +96,8 @@ game.update = function() {
     } else {
         _player.body.angularVelocity = 0;
     }
-sendStream(_player);
-sendStream(hook);
+    sendStream(_player);
+    sendStream(hook);
 };
 
 game.screenWrap = function(sprite) {
@@ -119,15 +120,16 @@ function sendStream(object) {
     if (user.length >= 1) {
 
         switch (object) {
+
             case _player:
-                stream.x = _player.x - 50;
-                stream.y = _player.y - 64;
+                stream.x = _player.x-_player.width/2;
+                stream.y = _player.y-_player.height/2;
                 channel.send(stream);
                 break;
 
             case hook:
-                stream.hookx = hook.x - 50;
-                stream.hooky = hook.y - 64;
+                stream.hookx = hook.x;
+                stream.hooky = hook.y;
                 channel.send(stream);
                 break;
         }
@@ -144,8 +146,8 @@ function throwHook() {
     game.physics.arcade.velocityFromRotation(_player.rotation, 400, hook.body.velocity);
 };
 
-function stopHook() {
 
+function stopHook() {
     hook.body.velocity.set(0);
 };
 
@@ -153,8 +155,8 @@ function stopHook() {
 
 
 channel.onopen = function(data, userid) {
-    stream.x = _player.x - 50;
-    stream.y = _player.y - 64;
+    stream.x = _player.x;
+    stream.y = _player.y;
     channel.send(stream);
 };
 
@@ -175,9 +177,11 @@ channel.onmessage = function(data, userid, latency) {
         var name = game.add.text(40, 14, userid, this._fontStyle);
         name.anchor.set(0.5);
         enemy.addChild(name);
+             game.physics.arcade.enable(enemy);
+  enemy.body.collideWorldBounds = true;
+enemy.body.bounce.setTo(1, 1);
 
-
-        game.physics.arcade.enable(enemy);
+   
 
 
     }
@@ -190,7 +194,7 @@ channel.onleave = function(userid) {
         enemies.children[i].kill();
         enemyhooks.children[i].kill();
     } else {
-        user.pop();
+        user.pop;
         enemies.remove(enemy);
         enemyhooks.remove(enemyhook);
     }

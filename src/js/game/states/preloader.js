@@ -8,6 +8,7 @@ preloader.preload = function () {
     // load images
     this.game.load.image('logo', 'images/phaser.png#grunt-cache-bust');
     this.load.image('background', 'images/background.png');
+     this.load.image('monster-idle', 'images/monster-idle.png');
 
     this.load.image('close', 'images/orb-red.png');
 this.load.image('chat', 'images/chat.png');
@@ -17,7 +18,7 @@ this.load.image('chat', 'images/chat.png');
     // load spritesheets
 
   this.load.spritesheet('button', 'images/button_sprite_sheet.png', 193, 71);
-    this.game.load.spritesheet('monster-idle', 'images/monster-idle.png', 103, 131);
+   
     
  
 };
