@@ -1,3 +1,5 @@
+var DataChannel = require('DataChannel')
+var firebase = require('firebase')
 var Phaser = require('Phaser')
   , _ = require('lodash')
   , properties = require('./properties')

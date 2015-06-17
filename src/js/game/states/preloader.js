@@ -9,7 +9,7 @@ preloader.preload = function () {
     this.game.load.image('logo', 'images/phaser.png#grunt-cache-bust');
     this.load.image('background', 'images/background.png');
 
-    this.game.load.image('game-over', 'images/gameover.png');
+   
 
     this.game.load.image('button-pause', 'images/button-pause.png');
     this.game.load.image('bullet', 'images/purple_ball.png');
