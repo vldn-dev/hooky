@@ -9,14 +9,14 @@ preloader.preload = function () {
     this.game.load.image('logo', 'images/phaser.png#grunt-cache-bust');
     this.load.image('background', 'images/background.png');
 
-   
-
+    this.load.image('close', 'images/orb-red.png');
+this.load.image('chat', 'images/chat.png');
     this.game.load.image('button-pause', 'images/button-pause.png');
     this.game.load.image('bullet', 'images/purple_ball.png');
       this.game.load.atlas('arcade', 'images/arcade-joystick.png', 'images/arcade-joystick.json');
     // load spritesheets
-    // load spritesheets
-  
+
+  this.load.spritesheet('button', 'images/button_sprite_sheet.png', 193, 71);
     this.game.load.spritesheet('monster-idle', 'images/monster-idle.png', 103, 131);
     
  
