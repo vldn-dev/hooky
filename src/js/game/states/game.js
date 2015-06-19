@@ -174,7 +174,7 @@ channel.onmessage = function(data, userid, latency) {
 
         enemy = enemies.create(data.x, data.y, 'monster-idle');
         enemyhook = enemyhooks.create(data.hookx, data.hooky, 'bullet');
-        var name = game.add.text(40, 14, userid, this._fontStyle);
+        var name = game.add.text(48, 43, userid, this._fontStyle);
         name.anchor.set(0.5);
         enemy.addChild(name);
              game.physics.arcade.enable(enemy);
@@ -193,11 +193,8 @@ channel.onleave = function(userid) {
         user.splice(i, 1);
         enemies.children[i].kill();
         enemyhooks.children[i].kill();
-    } else {
-        user.pop;
-        enemies.remove(enemy);
-        enemyhooks.remove(enemyhook);
-    }
+    } 
+    
 };
 
 
