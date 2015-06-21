@@ -1008,7 +1008,6 @@
                 if (!channel) {
                     return;
                 }
-
                 channel.send(message);
             }
         };

@@ -14,7 +14,7 @@ boot.create = function () {
   this.game.sound.mute = properties.mute;
 
     this.game.input.maxPointers = 2;
-    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
     this.game.scale.pageAlignHorizontally = true;
     this.game.scale.pageAlignVertically = true;
     this.game.scale.setScreenSize(true);

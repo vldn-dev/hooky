@@ -8,8 +8,9 @@ preloader.preload = function () {
     // load images
     this.game.load.image('logo', 'images/phaser.png#grunt-cache-bust');
     this.load.image('background', 'images/background.png');
-     this.load.image('monster-idle', 'images/monster-idle.png');
 
+     this.load.image('monster-player', 'images/monster-player.png');
+     this.load.image('monster-idle', 'images/monster-idle.png');
     this.load.image('close', 'images/orb-red.png');
 this.load.image('chat', 'images/chat.png');
     this.game.load.image('button-pause', 'images/button-pause.png');
