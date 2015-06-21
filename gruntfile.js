@@ -216,8 +216,8 @@ module.exports = function (grunt) {
   );
 
   grunt.registerTask('build',
-    [ /*'jshint'
-    , */'clean'
+    [ 'jshint'
+    , 'clean'
     , 'browserify'
     , 'jade'
     , 'stylus'

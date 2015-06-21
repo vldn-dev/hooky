@@ -14,7 +14,7 @@
     "license": "MIT",
     "browser": {
         "lodash": "./node_modules/lodash/dist/lodash.compat.js",
-        "Phaser": "./src/js/lib/phaser.arcade.js",
+        "Phaser": "./src/js/lib/phaser-2.3.0.js",
         "Stats": "./src/js/lib/stats.min.js",
         "DataChannel": "./src/js/lib/DataChannel.js",
         "firebase": "./src/js/lib/firebase.js"
