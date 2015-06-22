@@ -46,6 +46,8 @@ game.create = function() {
   arrowKeys = game.input.keyboard.createCursorKeys();
   shootButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   shootButton.onDown.add(throwHook, this);
+game.input.onDown.add(gofull,this);
+
 
 channel.onopen = function() {
 if (channelOpen === 'false'){
@@ -92,9 +94,9 @@ channel.onmessage = function(data, userid) {
 	 enemy = enemies.create(data.x, data.y, 'monster-idle');
 	  enemy.anchor.set(0.5);
 	 // enemyhook = enemyhooks.create(data.hookx, data.hooky, 'bullet');
-		  var name = game.add.text(48, 43, userid, game.fontStyle);
-	  name.anchor.set(0.5);
-	  enemy.addChild(name);
+//		  var name = game.add.text(48, 43, userid, game.fontStyle);
+//	  name.anchor.set(0.5);
+//	  enemy.addChild(name);
 	  game.physics.p2.enable([enemy]);
 
 	  enemy.body.collideWorldBounds = true;
@@ -189,6 +191,13 @@ if (channelOpen === 'true'){
   }
 }
 };
+function gofull() {
+if (game.scale.isFullScreen){
+
+game.scale.stopFullScreen();}
+else{
+game.scale.startFullScreen(false);}
+}
 
 function throwHook() {
   // Need to delete last event from Array!!

@@ -9,7 +9,7 @@ module.exports =
   , showStats: true
   , size:
     { x: 960
-    , y: 640
+    , y: 540
     }
   , analyticsId: 'UA-50892214-2'
   };

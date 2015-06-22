@@ -4,7 +4,7 @@ var Stats = require('Stats')
 
 boot.preload = function() {
   this.game.load.image('preloaderBar', 'images/loading-bar.png');
-}
+};
 boot.create = function () {
 
   if (properties.showStats) {
@@ -17,7 +17,7 @@ boot.create = function () {
     this.game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
     this.game.scale.pageAlignHorizontally = true;
     this.game.scale.pageAlignVertically = true;
-    this.game.scale.setScreenSize(true);
+//    this.game.scale.setScreenSize(true);
 
   this.game.state.start('preloader');
 };
