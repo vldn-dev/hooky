@@ -54,7 +54,7 @@ game.create = function() {
   arrowKeys = game.input.keyboard.createCursorKeys();
   shootButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   shootButton.onDown.add(throwHook, this);
-  game.input.onDown.add(gofull,this);
+ // game.input.onDown.add(gofull,this);
 
 
   channel.onopen = function() {
@@ -90,11 +90,7 @@ game.create = function() {
 		game.physics.p2.enable([enemy]);
 		enemy.body.collideWorldBounds = true;
 		// game.physics.p2.createDistanceConstraint(enemy,enemyhook,150);
-
-	  }
-
-
-  };
+} };
 
   channel.onleave = function(userid) {
 	var i = user.indexOf(userid);
