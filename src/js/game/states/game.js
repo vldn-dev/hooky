@@ -108,11 +108,11 @@ game.update = function() {
 
 
   if (channelOpen === 'true'){
-	if (_player.body.velocity >= 0){
+//	if (_player.body.velocity >= 0){
 	  stream = {action:'move', x:_player.x, y:_player.y};
 	  channel.send(stream);
 	  stream = 'null';
-	}
+//	}
   }
 
   if (arrowKeys.left.isDown) {
