@@ -17,35 +17,34 @@ var y;
 var channel = new DataChannel(location.hash.substr(1) || 'auto-session-establishment', {
   firebase: 'webrtc-experiment'
 });
-
+var MAX_SPEED = 300;
+var ACCELERATION = 1000;
+var DRAG = 300;
 
 game.create = function() {
   x = game.world.randomX;
   y = game.world.randomY;
 
-  game.physics.startSystem(Phaser.Physics.P2JS);
   enemies = game.add.group();
   enemyhooks = game.add.group();
-  game.physics.p2.restitution = 0.8;
   //  _player = game.add.sprite(x, y, 'monster-player');
   //  _player.anchor.set(0.5);
   var _playerShape = game.add.bitmapData(20,20);
-  _playerShape.fill(0,100,0,1);
+  _playerShape.fill(255,255,255,1);
   _player = game.add.sprite(0,0, _playerShape);
   _player.x = x;
   _player.y = y;
   
   //_player.addChild(_playerShape);
   // hook = game.add.sprite(0, 0, 'bullet');
-  game.physics.p2.enable([_player]);
-  _player.body.force = 450;
+ game.physics.enable(_player, Phaser.Physics.ARCADE);
   //	  game.physics.p2.createDistanceConstraint(_player,hook,150);
   //	  game.camera.follow(_player);
   _player.body.collideWorldBounds = true;
-
+_player.body.drag.setTo(DRAG,0);
 wall = game.add.graphics();
-wall.lineStyle(2,0x0000FF,1);
-wall.drawRect(150,150,game.world.width-300,game.world.height-300);
+wall.lineStyle(10,0xFFFFFF,1);
+wall.drawRect(100,100,game.world.width-200,game.world.height-200);
 
 
 
@@ -73,10 +72,10 @@ wall.drawRect(150,150,game.world.width-300,game.world.height-300);
   
    channel.onopen = function() {
 	if (channelOpen === 'false'){
-	   _player.body.x = game.world.width/2-250;
-	  _player.body.y = game.world.height/2;
+	   _player.x = game.world.width/2-250;
+	  _player.y = game.world.height/2;
 
-	  stream = {action:'move', x:game.world.width-_player.body.x, y:_player.body.y};
+	  stream = {action:'move', x:game.world.width-_player.x, y:_player.y};
 	  channel.send(stream);
 	  channelOpen = 'true';
 	}
@@ -92,10 +91,8 @@ wall.drawRect(150,150,game.world.width-300,game.world.height-300);
 	  switch (data.action){
 
 		case 'move':
-		  var tempEnemy = enemies.children[i];
-		tempEnemy.body.setZeroVelocity();
-		enemies.children[i].body.x = data.x;
-		enemies.children[i].body.y = data.y;
+		enemies.children[i].x = data.x;
+		enemies.children[i].y = data.y;
 		break;
 
 	  }} else {
@@ -109,7 +106,7 @@ wall.drawRect(150,150,game.world.width-300,game.world.height-300);
 		// var name = game.add.text(48, 43, userid, game.fontStyle);
 		// name.anchor.set(0.5);
 		// enemy.addChild(name);
-		game.physics.p2.enable([enemy]);
+		game.physics.arcade.enable([enemy]);
 		enemy.body.collideWorldBounds = true;
 		// game.physics.p2.createDistanceConstraint(enemy,enemyhook,150);
 	  } };
@@ -125,31 +122,27 @@ wall.drawRect(150,150,game.world.width-300,game.world.height-300);
 };
 
 game.update = function() {
-_player.body.setZeroVelocity();
 
   if (channelOpen === 'true'){
-	//	if (_player.body.velocity >= 0){
-	stream = {action:'move', x:game.world.width-_player.body.x, y:_player.body.y};
+		if (_player.body.acceleration.x >= 0){
+	stream = {action:'move', x:game.world.width-_player.x, y:_player.y};
 	channel.send(stream);
 	stream = 'null';
-	//	}
+	}
   }
 
   if (arrowKeys.left.isDown) {
 
-	_player.body.moveLeft(100);
+	_player.body.acceleration.x= -ACCELERATION;
   } else if (arrowKeys.right.isDown) {
-
-	_player.body.moveRight(100);
-  }
+_player.body.acceleration.x=ACCELERATION;
+  }else{_player.body.acceleration.x=0;}
 
   if (arrowKeys.up.isDown) {
-
-	_player.body.moveUp(100);
+_player.body.acceleration.y = -ACCELERATION;
   } else if (arrowKeys.down.isDown) {
-
-	_player.body.moveDown(100);
-  }
+_player.body.acceleration.y = ACCELERATION;
+  }else{_player.body.acceleration.y=0;}
 
 };
 function gofull() {
