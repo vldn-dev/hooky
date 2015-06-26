@@ -17,6 +17,8 @@ var y;
 var channel = new DataChannel(location.hash.substr(1) || 'auto-session-establishment', {
   firebase: 'webrtc-experiment'
 });
+var vanish;
+var vanishFlag;
 var MAX_SPEED = 300;
 var ACCELERATION = 1000;
 var DRAG = 300;
@@ -27,24 +29,18 @@ game.create = function() {
 
   enemies = game.add.group();
   enemyhooks = game.add.group();
-  //  _player = game.add.sprite(x, y, 'monster-player');
-  //  _player.anchor.set(0.5);
   var _playerShape = game.add.bitmapData(20,20);
   _playerShape.fill(255,255,255,1);
   _player = game.add.sprite(0,0, _playerShape);
   _player.x = x;
   _player.y = y;
-  
-  //_player.addChild(_playerShape);
-  // hook = game.add.sprite(0, 0, 'bullet');
- game.physics.enable(_player, Phaser.Physics.ARCADE);
-  //	  game.physics.p2.createDistanceConstraint(_player,hook,150);
-  //	  game.camera.follow(_player);
+_player.alpha = 1;
+  game.physics.enable(_player, Phaser.Physics.ARCADE);
   _player.body.collideWorldBounds = true;
-_player.body.drag.setTo(DRAG,0);
-wall = game.add.graphics();
-wall.lineStyle(10,0xFFFFFF,1);
-wall.drawRect(100,100,game.world.width-200,game.world.height-200);
+  _player.body.drag.setTo(DRAG,0);
+  wall = game.add.graphics();
+  wall.lineStyle(10,0xFFFFFF,1);
+  wall.drawRect(100,100,game.world.width-200,game.world.height-200);
 
 
 
@@ -67,12 +63,12 @@ wall.drawRect(100,100,game.world.width-200,game.world.height-200);
   shootButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   shootButton.onDown.add(throwHook, this);
   // game.input.onDown.add(gofull,this);
-  
-  
-  
-   channel.onopen = function() {
+
+
+
+  channel.onopen = function() {
 	if (channelOpen === 'false'){
-	   _player.x = game.world.width/2-250;
+	  _player.x = game.world.width/2-250;
 	  _player.y = game.world.height/2;
 
 	  stream = {action:'move', x:game.world.width-_player.x, y:_player.y};
@@ -91,7 +87,7 @@ wall.drawRect(100,100,game.world.width-200,game.world.height-200);
 	  switch (data.action){
 
 		case 'move':
-		enemies.children[i].x = data.x;
+		  enemies.children[i].x = data.x;
 		enemies.children[i].y = data.y;
 		break;
 
@@ -102,32 +98,39 @@ wall.drawRect(100,100,game.world.width-200,game.world.height-200);
 		enemyShape.fill(100,0,0,1);
 		enemy = enemies.create(data.x, data.y, enemyShape);
 		enemy.anchor.set(0.5);
-		// enemyhook = enemyhooks.create(data.hookx, data.hooky, 'bullet');
-		// var name = game.add.text(48, 43, userid, game.fontStyle);
-		// name.anchor.set(0.5);
-		// enemy.addChild(name);
-		game.physics.arcade.enable([enemy]);
+		game.physics.enable(enemy, Phaser.Physics.ARCADE);
 		enemy.body.collideWorldBounds = true;
-		// game.physics.p2.createDistanceConstraint(enemy,enemyhook,150);
 	  } };
 
 	  channel.onleave = function(userid) {
 		var i = user.indexOf(userid);
 		user.splice(i, 1);
 		enemies.children[i].kill();
-		//  enemyhooks.children[i].kill();
 
 	  };
 
 };
 
 game.update = function() {
-
   if (channelOpen === 'true'){
-		if (_player.body.acceleration.x >= 0){
-	stream = {action:'move', x:game.world.width-_player.x, y:_player.y};
-	channel.send(stream);
-	stream = 'null';
+if (_player.x <= 100 || _player.x >= game.world.width-100 || _player.y <= 100 || _player.y >=game.world.height-100) {
+  game.stage.backgroundColor = '#992d2d';
+  vanish = game.add.tween(_player).to ({alpha: 0}, 1500, Phaser.Easing.Linear.None,true);
+  vanish.onComplete.add(newRound,this);
+  vanishFlag = true;
+}    else {
+  if (vanishFlag === true){game.tweens.removeAll(); _player.alpha=1;}
+  game.stage.backgroundColor = '#000000';
+vanishFlag = false;
+}
+
+
+game.physics.arcade.collide(_player,enemy, collisionHandler,null,this);
+	if (_player.body.acceleration.x >= 0){
+
+	  stream = {action:'move', x:game.world.width-_player.x, y:_player.y};
+	  channel.send(stream);
+	  stream = 'null';
 	}
   }
 
@@ -135,13 +138,13 @@ game.update = function() {
 
 	_player.body.acceleration.x= -ACCELERATION;
   } else if (arrowKeys.right.isDown) {
-_player.body.acceleration.x=ACCELERATION;
+	_player.body.acceleration.x=ACCELERATION;
   }else{_player.body.acceleration.x=0;}
 
   if (arrowKeys.up.isDown) {
-_player.body.acceleration.y = -ACCELERATION;
+	_player.body.acceleration.y = -ACCELERATION;
   } else if (arrowKeys.down.isDown) {
-_player.body.acceleration.y = ACCELERATION;
+	_player.body.acceleration.y = ACCELERATION;
   }else{_player.body.acceleration.y=0;}
 
 };
@@ -157,8 +160,20 @@ function throwHook() {
   // Need to delete last event from Array!!
 }
 
+function collisionHandler (obj1, obj2) {
 
+   //  The two sprites are colliding
+      //  game.stage.backgroundColor = '#992d2d';
+  
+       }
 function stopHook() {
 }
-
+function newRound() {
+	  _player.x = game.world.width/2-250;
+	  _player.y = game.world.height/2;
+_player.alpha = 1;
+	  stream = {action:'move', x:game.world.width-_player.x, y:_player.y};
+	  channel.send(stream);
+	  channelOpen = 'true';
+}
 module.exports = game;
