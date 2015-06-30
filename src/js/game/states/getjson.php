@@ -1,9 +1,9 @@
 </p>
 <?php
-$mysql_db_hostname = "localhost";
+$mysql_db_hostname = "vldn.de";
 $mysql_db_user = "root";
-$mysql_db_password = "12345";
-$mysql_db_database = "school";
+$mysql_db_password = "hSjdASm52Ad3ga";
+$mysql_db_database = "hooky";
 
 &nbsp;
 
@@ -14,12 +14,12 @@ if (!$con) {
  trigger_error('Could not connect to MySQL: ' . mysqli_connect_error());
 }
 $var = array();
- $sql = "SELECT * FROM users";
+ $sql = "SELECT * FROM hooky";
 $result = mysqli_query($con, $sql);
 
 while($obj = mysqli_fetch_object($result)) {
   $var[] = $obj;
 }
-echo '{"users":'.json_encode($var).'}';
+echo '{"hooky":'.json_encode($var).'}';
 ?>
 <p style="text-align: justify;">
