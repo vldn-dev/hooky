@@ -14,9 +14,14 @@ var fontStyle = null;
 var arrowKeys;
 var x;
 var y;
+var hash = window.location.hash.replace('#','');
+if (hash.length) {
+
 var channel = new DataChannel(location.hash.substr(1) || 'auto-session-establishment', {
     firebase: 'webrtc-experiment'
 });
+}
+
 var vanish;
 var vanishFlag;
 var MAX_SPEED = 300;
@@ -66,6 +71,23 @@ game.create = function() {
     // game.input.onDown.add(gofull,this);
 
 
+if (hash.length) {
+ var newhash = window.location.hash.replace('#','');
+  var data = newhash; 
+  var xhr;
+
+  if (window.XMLHttpRequest) {xhr = new XMLHttpRequest();}  
+  else xhr = new ActiveXObject("Microsoft.XMLHTTP"); 
+  xhr.onreadystatechange = function () 
+  {
+    if (xhr.readyState == 4 && xhr.status == 200) 
+     {
+	      var serverResponse = JSON.parse(xhr.responseText);     
+	    }
+   };
+   xhr.open("POST", "http://vldn.de/post.php", true);
+   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+   xhr.send("data="+data);
 
     channel.onopen = function() {
         if (channelOpen === 'false') {
@@ -122,7 +144,7 @@ game.create = function() {
         enemies.children[i].destroy();
 
     };
-
+}
 };
 
 game.update = function() {
