@@ -1,0 +1,31 @@
+<html>
+<title> $_REQUEST</title>
+<head></head><body>
+Eingabe <input type = "text" id="name" value="">
+<button onclick="send()">Click me</button>
+<script>
+function send(){
+
+ var data = document.getElementById("name").value;
+
+ var xhr;
+
+ if (window.XMLHttpRequest) xhr = new XMLHttpRequest();  
+ else xhr = new ActiveXObject("Microsoft.XMLHTTP"); 
+ xhr.onreadystatechange = function () 
+ {
+  if (xhr.readyState == 4 && xhr.status == 200) 
+   {
+     var serverResponse = JSON.parse(xhr.responseText);     
+   }
+ }
+ xhr.open("POST", "post.php", true);
+ xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+ xhr.send("data="+data);
+
+
+
+}
+</script>
+</body>
+</html>
