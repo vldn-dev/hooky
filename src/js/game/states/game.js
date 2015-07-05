@@ -14,13 +14,6 @@ var fontStyle = null;
 var arrowKeys;
 var x;
 var y;
-var hash = window.location.hash.replace('#','');
-if (hash.length) {
-
-var channel = new DataChannel(location.hash.substr(1) || 'auto-session-establishment', {
-    firebase: 'webrtc-experiment'
-});
-}
 
 var vanish;
 var vanishFlag;
@@ -28,6 +21,15 @@ var MAX_SPEED = 300;
 var ACCELERATION = 1000;
 var DRAG = 300;
 var collide = false;
+
+game.preload = function() {
+
+this.hash = window.location.hash.replace('#','');
+this.channel = new DataChannel(location.hash.substr(1) || 'auto-session-establishment', {
+    firebase: 'webrtc-experiment'
+});
+};
+
 game.create = function() {
     x = game.world.randomX;
     y = game.world.randomY;
@@ -71,25 +73,20 @@ game.create = function() {
     // game.input.onDown.add(gofull,this);
 
 
-if (hash.length) {
- var newhash = window.location.hash.replace('#','');
-  var data = newhash; 
-  var xhr;
 
+  var xhr;
+this.data= this.hash;
   if (window.XMLHttpRequest) {xhr = new XMLHttpRequest();}  
-  else xhr = new ActiveXObject("Microsoft.XMLHTTP"); 
-  xhr.onreadystatechange = function () 
-  {
-    if (xhr.readyState == 4 && xhr.status == 200) 
-     {
-	      var serverResponse = JSON.parse(xhr.responseText);     
-	    }
+  else {xhr = new ActiveXObject("Microsoft.XMLHTTP");} 
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) 
+     { this.serverResponse = JSON.parse(xhr.responseText);     }
    };
    xhr.open("POST", "http://vldn.de/post.php", true);
    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-   xhr.send("data="+data);
+   xhr.send("data="+this.data);
 
-    channel.onopen = function() {
+    this.channel.onopen = function() {
         if (channelOpen === 'false') {
             _player.x = game.world.width / 2 - 250;
             _player.y = game.world.height / 2;
@@ -99,14 +96,14 @@ if (hash.length) {
                 x: game.world.width - _player.x,
                 y: _player.y
             };
-            channel.send(stream);
+            this.channel.send(stream);
             channelOpen = 'true';
         }
 
     };
 
 
-    channel.onmessage = function(data, userid) {
+    this.channel.onmessage = function(data, userid) {
         console.log(data, userid);
 
         var i = user.indexOf(userid);
@@ -137,14 +134,13 @@ if (hash.length) {
         }
     };
 
-    channel.onleave = function(userid) {
+    this.channel.onleave = function(userid) {
         var i = user.indexOf(userid);
         user.splice(i, 1);
 		enemies.children[i].body = null;
         enemies.children[i].destroy();
 
     };
-}
 };
 
 game.update = function() {
@@ -176,7 +172,7 @@ game.update = function() {
                     x: game.world.width - _player.x,
                     y: _player.y
                 };
-                channel.send(stream);
+                this.channel.send(stream);
                 stream = 'null';
             } else {
                 stream = {
@@ -184,7 +180,7 @@ game.update = function() {
                     x: game.world.width - enemy.x,
                     y: enemy.y
                 };
-                channel.send(stream);
+                this.channel.send(stream);
                 stream = null;
 
             }
@@ -247,7 +243,7 @@ function newRound() {
         x: game.world.width - _player.x,
         y: _player.y
     };
-    channel.send(stream);
+    this.channel.send(stream);
 }
 
 function togglePause() {

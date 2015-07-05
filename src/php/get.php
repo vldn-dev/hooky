@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-$conn = new mysqli("localhost", "root", "jSfsjJhwZ72DmK", "hooky");
+$conn = new mysqli("http://vldn.de", "root", "jSfsjJhwZ72DmK", "hooky");
 
 $result = $conn->query("SELECT id, user FROM rooms");
 

@@ -1,6 +1,6 @@
 {
-    "name": "phaser-js-boilerplate",
-    "version": "0.1.0",
+    "name": "hooky",
+    "version": "0.0.3",
     "description": "A Grunty Phaser.js SDK",
     "main": "build/js/app.min.js",
     "scripts": {
@@ -8,7 +8,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git@github.com:lukewilde/phaser-js-boilerplate.git"
+        "url": "git@github.com:vldn-dev/hooky.git"
     },
     "author": "Luke Wilde",
     "license": "MIT",

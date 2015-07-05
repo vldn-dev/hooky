@@ -37,10 +37,7 @@ module.exports = function (grunt) {
         ' * @author <%= pkg.author %>\n' +
         ' * @version <%= pkg.version %>\n' +
         ' * @copyright <%= pkg.author %>\n' +
-        ' * @license <%= pkg.license %> licensed\n' +
-        ' *\n' +
-        ' * Made using Phaser JS Boilerplate <https://github.com/lukewilde/phaser-js-boilerplate>\n' +
-        ' */\n'
+        ' * @license <%= pkg.license %> licensed\n' 
       }
 
     , connect:
@@ -86,6 +83,10 @@ module.exports = function (grunt) {
         { files: 'src/audio/**/*'
         , tasks: ['copy:audio']
         }
+	,	php:
+		  { files: 'src/php/**/*'
+		, tasks: ['copy:php']
+		}
       }
 
     , browserify:
@@ -171,6 +172,11 @@ module.exports = function (grunt) {
           [ { expand: true, cwd: 'src/images/', src: ['**'], dest: 'build/images/' }
           ]
         }
+	,	php:
+		 { files:
+			[ { expand: true, cwd: 'src/php/', src: ['**'], dest: 'build/php/'}
+			]
+		}
       , audio:
         { files:
           [ { expand: true, cwd: 'src/audio/', src: ['**'], dest: 'build/audio/' }

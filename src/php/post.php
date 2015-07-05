@@ -1,5 +1,6 @@
 <?php
-$servername = "localhost";
+header("Access-Control-Allow-Origin: *");
+$servername = "http://vldn.de";
 $username = "root";
 $password = "jSfsjJhwZ72DmK";
 $dbname = "hooky";
