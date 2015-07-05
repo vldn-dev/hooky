@@ -39,7 +39,7 @@ mainmenu.create = function() {
 
             for (i = 0; i < arr.length; i++) {
                 roomid = mainmenu.game.add.text(32, y, arr[i].ID, style, idgroup);
-                roomuser = mainmenu.game.add.text(62, y, arr[i].User, style, usergroup);
+                roomuser = mainmenu.game.add.text(262, y, arr[i].User, style, usergroup);
                 roomid.name = i;
                 idgroup.children[i].inputEnabled = true;
                 idgroup.children[i].events.onInputDown.add(open, this);
