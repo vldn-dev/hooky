@@ -36,8 +36,8 @@ game.create = function() {
 	firebase: 'webrtc-experiment'
   });
 
-  x = game.world.randomX;
-  y = game.world.randomY;
+  x = randInt(100,game.world.width-100);
+  y = randInt(100,game.world.height-100);
 
   enemies = game.add.group();
   enemyhooks = game.add.group();
@@ -118,12 +118,15 @@ window.onbeforeunload = function() {
 
 	this.channel.onopen = function() {
 	if (channelOpen === 'false') {
-	  _player.x = game.world.width / 2 - 250;
-	  _player.y = game.world.height / 2;
-
+	  
+	  
+	  _player.x = randInt(100,game.world.width-100); 
+	  _player.y = randInt(100,game.world.height-100);
 	  stream = {
+
+
 		action: 'move',
-		x: game.world.width - _player.x,
+		x: _player.x,
 		y: _player.y
 	  };
 	  game.channel.send(stream);
@@ -199,7 +202,7 @@ game.update = function() {
 	  if (collide === false) {
 		stream = {
 		  action: 'move',
-		  x: game.world.width - _player.x,
+		  x:  _player.x,
 		  y: _player.y
 		};
 		game.channel.send(stream);
@@ -207,7 +210,7 @@ game.update = function() {
 	  } else {
 		stream = {
 		  action: 'collision',
-		  x: game.world.width - enemy.x,
+		  x: enemy.x,
 		  y: enemy.y
 		};
 		game.channel.send(stream);
@@ -266,15 +269,22 @@ function collisionHandler(obj1, obj2) {
 function stopHook() {}
 
 function newRound() {
-  _player.x = game.world.width / 2 - 250;
-  _player.y = game.world.height / 2;
+
+	  _player.x = randInt(100,game.world.width-100); 
+	  _player.y = randInt(100,game.world.height-100);
+
   stream = {
 	action: 'reset',
-	x: game.world.width - _player.x,
+	x: _player.x,
 	y: _player.y
   };
   game.channel.send(stream);
 }
+
+
+
+function randInt(min,max) { var div = (max - min) + 1;
+  var randNum = Math.random(); for (var i = 0; i <= div - 1; i++) { if (randNum >= i / div && randNum < (i+1) / div) {return i + min} } }
 
 function togglePause() {
 
