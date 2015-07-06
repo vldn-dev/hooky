@@ -27,12 +27,14 @@ game.preload = function() {
 };
 
 game.create = function() {
+
+
   this.hash = window.location.hash.replace('#','');
 
-this.channel = new DataChannel(location.hash.substr(1) || 'auto-session-establishment', {
+  this.channel = new DataChannel(location.hash.substr(1) || 'auto-session-establishment', {
 
-  firebase: 'webrtc-experiment'
-});
+	firebase: 'webrtc-experiment'
+  });
 
   x = game.world.randomX;
   y = game.world.randomY;
@@ -74,22 +76,47 @@ this.channel = new DataChannel(location.hash.substr(1) || 'auto-session-establis
   shootButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   shootButton.onDown.add(throwHook, this);
   // game.input.onDown.add(gofull,this);
-
-
-
   var xhr;
   this.mysqlID = this.hash;
-  if (window.XMLHttpRequest) {xhr = new XMLHttpRequest();}  
-  else {xhr = new ActiveXObject("Microsoft.XMLHTTP");} 
-  xhr.onreadystatechange = function () {
-	if (xhr.readyState === 4 && xhr.status === 200) 
-	  { this.serverResponse = JSON.parse(xhr.responseText);     }
-  };
-  xhr.open("POST", "http://vldn.de/post.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("channelid="+this.mysqlID+"&user="+1);
+
+
+	if (window.XMLHttpRequest) {xhr = new XMLHttpRequest();}  
+	else {xhr = new ActiveXObject("Microsoft.XMLHTTP");} 
+	xhr.onreadystatechange = function () {
+	  if (xhr.readyState === 4 && xhr.status === 200) 
+		{ this.serverResponse = JSON.parse(xhr.responseText);     }
+	};
+	xhr.open("POST", "http://vldn.de/post.php", true);
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhr.send("channelid="+this.mysqlID+"&user="+1);
+
+  //sessionStorage.setItem("is_reloaded",true);
  
-  this.channel.onopen = function() {
+   
+
+window.onbeforeunload = function() {
+
+  this.xhr;
+  this.hash = window.location.hash.replace('#','');
+
+  if (window.XMLHttpRequest) {this.xhr = new XMLHttpRequest();}  
+  else {this.xhr = new ActiveXObject("Microsoft.XMLHTTP");} 
+  this.xhr.onreadystatechange = function () {
+	if (this.xhr.readyState === 4 && this.xhr.status === 200) 
+	  { this.serverResponse = JSON.parse(this.xhr.responseText);     }
+  };
+  this.xhr.open("POST", "http://vldn.de/post.php", true);
+ this.xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  this.xhr.send("channelid="+this.hash+"&leave="+1);
+
+
+
+
+
+};
+
+
+	this.channel.onopen = function() {
 	if (channelOpen === 'false') {
 	  _player.x = game.world.width / 2 - 250;
 	  _player.y = game.world.height / 2;
@@ -254,24 +281,5 @@ function togglePause() {
   game.physics.arcade.isPaused = (game.physics.arcade.isPaused) ? false : true;
 
 }
-window.onbeforeunload = function() {
-
-  var xhr;
-    this.hash = window.location.hash.replace('#','');
-
-  if (window.XMLHttpRequest) {xhr = new XMLHttpRequest();}  
-  else {xhr = new ActiveXObject("Microsoft.XMLHTTP");} 
-  xhr.onreadystatechange = function () {
-	if (xhr.readyState === 4 && xhr.status === 200) 
-	  { this.serverResponse = JSON.parse(xhr.responseText);     }
-  };
-  xhr.open("POST", "http://vldn.de/post.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("channelid="+this.hash+"&leave="+1);
- 
-
-
- 
-};
 
 module.exports = game;
